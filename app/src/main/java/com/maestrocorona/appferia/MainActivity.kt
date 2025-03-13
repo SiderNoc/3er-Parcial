@@ -8,11 +8,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import android.content.Intent
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.unit.sp
+
+import androidx.compose.ui.res.colorResource
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +53,8 @@ fun MainScreen(onNavigateToSecondActivity: () -> Unit) {
             BusinessItem("Negocios de la Nave 1")
             BusinessItem("Negocios de la Nave 2")
             BusinessItem("Negocios de la Nave 3")
+            BusinessItem("Atracciones y Conciertos")
+
             
             // Botón para navegar a la segunda actividad
             Button(
@@ -63,7 +73,10 @@ fun BusinessItem(text: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(120.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(id = R.color.purple_80) // Fondo de la Card
+        )
     ) {
         Row(
             modifier = Modifier
@@ -82,8 +95,19 @@ fun BusinessItem(text: String) {
             // Texto del negocio
             Text(
                 text = text,
-                modifier = Modifier.padding(8.dp)
+                fontSize = 18.sp,
+                modifier = Modifier.padding(8.dp),
+                style = TextStyle(
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = Bold,
+                    color = colorResource(id = R.color.purple_40)
+                )
             )
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun PreviewMyApp() {
+    MainScreen(onNavigateToSecondActivity = { /* Simular navegación */ })
 }

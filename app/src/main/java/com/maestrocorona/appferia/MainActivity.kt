@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import android.content.Intent
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -50,12 +52,11 @@ fun MainScreen(onNavigateToSecondActivity: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Lista de negocios con sus imágenes
-            BusinessItem("Negocios de la Nave 1")
-            BusinessItem("Negocios de la Nave 2")
-            BusinessItem("Negocios de la Nave 3")
-            BusinessItem("Atracciones y Conciertos")
+            BusinessItem(text = "Negocios de la Nave 1", imageResource = R.drawable.logo_rest)
+            BusinessItem(text = "Negocios de la Nave 2", imageResource = R.drawable.imagen1)
+            BusinessItem(text = "Negocios de la Nave 3", imageResource = R.drawable.imagen2)
+            BusinessItem(text = "Atracciones y Conciertos", imageResource = R.drawable.imagen3)
 
-            
             // Botón para navegar a la segunda actividad
             Button(
                 onClick = onNavigateToSecondActivity,
@@ -68,7 +69,7 @@ fun MainScreen(onNavigateToSecondActivity: () -> Unit) {
 }
 
 @Composable
-fun BusinessItem(text: String) {
+fun BusinessItem(text: String, imageResource: Int) {
     // Componente reutilizable para mostrar negocio con imagen
     Card(
         modifier = Modifier
@@ -84,13 +85,14 @@ fun BusinessItem(text: String) {
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Imagen del restaurante
+            // Imagen del negocio
             Image(
-                painter = painterResource(id = R.drawable.logo_rest),
-                contentDescription = "Logo restaurante",
+                painter = painterResource(id = imageResource),
+                contentDescription = "Imagen del negocio $text",
                 modifier = Modifier
                     .size(100.dp)
                     .padding(8.dp)
+                    .clip(CircleShape)
             )
             // Texto del negocio
             Text(
@@ -106,6 +108,7 @@ fun BusinessItem(text: String) {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyApp() {

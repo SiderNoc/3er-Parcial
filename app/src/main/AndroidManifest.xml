@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppFeria"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,6 +29,14 @@
             android:name=".Activity2"
             android:exported="false"
             android:theme="@style/Theme.AppFeria" />
+
+        <activity
+            android:name=".DetalleNaveActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AtraccionesActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

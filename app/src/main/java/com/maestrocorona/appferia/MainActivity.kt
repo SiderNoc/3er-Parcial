@@ -12,16 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.layout.ContentScale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,14 +30,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreen(
                 onNavigateToSecondActivity = {
-                    // Iniciamos la segunda actividad cuando se presione el botón
+                    // Navigate to Activity2
                     startActivity(Intent(this, Activity2::class.java))
                 },
-                onNavigateToDetalleNave = {
-                    // Iniciamos la DetalleNaveActivity cuando se presione el botón "Ver más"
-                    startActivity(Intent(this, DetalleNaveActivity::class.java))
+                onNavigateToDetalleNave = { businessName, imageResource ->
+                    // Navigate to DetalleNaveActivity, passing data
+                    val intent = Intent(this, DetalleNaveActivity::class.java).apply {
+                        putExtra("BUSINESS_NAME", businessName)
+                        putExtra("IMAGE_RESOURCE", imageResource)
+                    }
+                    startActivity(intent)
                 },
                 onNavigateToAtracciones = {
+                    // Navigate to AtraccionesActivity
                     startActivity(Intent(this, AtraccionesActivity::class.java))
                 }
             )
@@ -46,8 +51,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(onNavigateToSecondActivity: () -> Unit, onNavigateToDetalleNave: () -> Unit, onNavigateToAtracciones: () -> Unit) {
-    // Pantalla principal que contiene todos los elementos
+fun MainScreen(
+    onNavigateToSecondActivity: () -> Unit,
+    onNavigateToDetalleNave: (String, Int) -> Unit,
+    onNavigateToAtracciones: () -> Unit
+) {
+    // Main screen layout
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -59,13 +68,29 @@ fun MainScreen(onNavigateToSecondActivity: () -> Unit, onNavigateToDetalleNave: 
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Lista de negocios con sus imágenes
-            BusinessItem(text = "Negocios de la Nave 1", imageResource = R.drawable.logo_rest, onNavigate = onNavigateToDetalleNave)
-            BusinessItem(text = "Negocios de la Nave 2", imageResource = R.drawable.imagen1, onNavigate = onNavigateToDetalleNave)
-            BusinessItem(text = "Negocios de la Nave 3", imageResource = R.drawable.imagen2, onNavigate = onNavigateToDetalleNave)
-            BusinessItem(text = "Atracciones y Conciertos", imageResource = R.drawable.imagen3, onNavigate = onNavigateToAtracciones)
+            // Business items
+            BusinessItem(
+                text = "Negocios de la Nave 1",
+                imageResource = R.drawable.logo_rest,
+                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 1", R.drawable.logo_rest) }
+            )
+            BusinessItem(
+                text = "Negocios de la Nave 2",
+                imageResource = R.drawable.imagen1,
+                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 2", R.drawable.imagen1) }
+            )
+            BusinessItem(
+                text = "Negocios de la Nave 3",
+                imageResource = R.drawable.imagen2,
+                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 3", R.drawable.imagen2) }
+            )
+            BusinessItem(
+                text = "Atracciones y Conciertos",
+                imageResource = R.drawable.imagen3,
+                onNavigate = { onNavigateToAtracciones() }
+            )
 
-            // Botón para navegar a la segunda actividad
+            // Button to navigate to Activity2
             Button(
                 onClick = onNavigateToSecondActivity,
                 modifier = Modifier.padding(top = 16.dp)
@@ -78,13 +103,13 @@ fun MainScreen(onNavigateToSecondActivity: () -> Unit, onNavigateToDetalleNave: 
 
 @Composable
 fun BusinessItem(text: String, imageResource: Int, onNavigate: () -> Unit) {
-    // Componente reutilizable para mostrar negocio con imagen
+    // Reusable component for displaying a business item
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.purple_80) // Fondo de la Card
+            containerColor = colorResource(id = R.color.purple_80)
         )
     ) {
         Row(
@@ -94,16 +119,17 @@ fun BusinessItem(text: String, imageResource: Int, onNavigate: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Imagen del negocio
+            // Business image
             Image(
                 painter = painterResource(id = imageResource),
                 contentDescription = "Imagen del negocio $text",
                 modifier = Modifier
                     .size(100.dp)
                     .padding(8.dp)
-                    .clip(CircleShape)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
             )
-            // Texto del negocio
+            // Business text
             Text(
                 text = text,
                 fontSize = 18.sp,
@@ -112,11 +138,11 @@ fun BusinessItem(text: String, imageResource: Int, onNavigate: () -> Unit) {
                     .weight(1f),
                 style = TextStyle(
                     fontFamily = FontFamily.SansSerif,
-                    fontWeight = Bold,
+                    fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.purple_40)
                 )
             )
-            // Boton ver mas
+            // "Ver más" button
             FilledTonalButton(onClick = onNavigate, modifier = Modifier.padding(end = 8.dp)) {
                 Text("Ver más")
             }
@@ -127,5 +153,7 @@ fun BusinessItem(text: String, imageResource: Int, onNavigate: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyApp() {
-    MainScreen(onNavigateToSecondActivity = { /* Simular navegación */ }, onNavigateToDetalleNave = { /* Simular navegación */ }, onNavigateToAtracciones = { /* Simular navegación */ })
+    MainScreen(onNavigateToSecondActivity = { /* Simulate navigation */ },
+        onNavigateToDetalleNave = { _, _ -> /* Simulate navigation */ },
+        onNavigateToAtracciones = { /* Simulate navigation */ })
 }

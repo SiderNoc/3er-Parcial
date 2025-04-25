@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,25 +69,38 @@ fun MainScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Text(
+                text = "FERIA TABASCO\n2025",
+                style = TextStyle(
+                    color = colorResource(id = R.color.purple_40),
+                    fontWeight = FontWeight.Bold
+                ),
+                fontSize = 40.sp,
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.Start), // Alineamos el contenido del Text a la izquierda
+                textAlign = TextAlign.Left
+            )
             // Business items
             BusinessItem(
                 text = "Negocios de la Nave 1",
-                imageResource = R.drawable.logo_rest,
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 1", R.drawable.logo_rest) }
+                imageResource = R.drawable.imagen_nave_1,
+                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 1", R.drawable.imagen_nave_1) }
             )
             BusinessItem(
                 text = "Negocios de la Nave 2",
-                imageResource = R.drawable.imagen1,
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 2", R.drawable.imagen1) }
+                imageResource = R.drawable.imagen_nave_2,
+                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 2", R.drawable.imagen_nave_2) }
             )
             BusinessItem(
                 text = "Negocios de la Nave 3",
-                imageResource = R.drawable.imagen2,
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 3", R.drawable.imagen2) }
+                imageResource = R.drawable.imagen_nave_3,
+                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 3", R.drawable.imagen_nave_3) }
             )
             BusinessItem(
                 text = "Atracciones y Conciertos",
-                imageResource = R.drawable.imagen3,
+                imageResource = R.drawable.imagen_conciertos,
                 onNavigate = { onNavigateToAtracciones() }
             )
 

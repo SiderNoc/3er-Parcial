@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,12 +48,12 @@ fun DetalleNaveScreen(businessName: String, imageResource: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(32.dp)
     ) {
         // Rectangular image
         Image(
             painter = painterResource(id = imageResource),
-            contentDescription = "Imagen de $businessName",
+            contentDescription = "Imagen",
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
@@ -60,15 +61,16 @@ fun DetalleNaveScreen(businessName: String, imageResource: Int) {
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(16.dp))
-        // Business name (title)
+
         Text(
             text = businessName,
-            fontSize = 24.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            color = colorResource(id = R.color.purple_40)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(18.dp))
         // Lorem ipsum text
         Text(
             text = loremIpsumText,
@@ -81,5 +83,5 @@ fun DetalleNaveScreen(businessName: String, imageResource: Int) {
 @Preview(showBackground = true)
 @Composable
 fun DetalleNavePreview() {
-    DetalleNaveScreen(businessName = "Negocios de la Nave 1", imageResource = R.drawable.logo_rest)
+    DetalleNaveScreen(businessName = "Negocios de la Nave 2", imageResource = R.drawable.imagen_nave_3)
 }

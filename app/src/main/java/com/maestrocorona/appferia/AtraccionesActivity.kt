@@ -43,11 +43,11 @@ class AtraccionesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AtraccionesScreen(onBackPressed = { finish() })
+            AtraccionesScreen(onBackPressed = { finish() })//onBackPressed finaliza la actividad
         }
     }
 }
-
+//Clase para los artistas
 data class Artista(val name: String, val date: String, val imageResource: Int)
 
 @Composable
@@ -90,7 +90,7 @@ fun AtraccionesScreen(onBackPressed: () -> Unit) {
                 items(artists) { artist ->
                     ArtistasRow(artist = artist)
                 }
-            }
+            }//Boton para volver
             Button(onClick = onBackPressed) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -108,7 +108,7 @@ fun AtraccionesScreen(onBackPressed: () -> Unit) {
 }
 
 
-
+//Clase para la card de los artistas
 @Composable
 fun ArtistasRow(artist: Artista) {
     Card(

@@ -3,39 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
-
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.maestrocorona.appferia.MainFragment"
-        android:label="Feria Tabasco"
-        tools:layout="@layout/fragment_main">
-        <action
-            android:id="@+id/action_mainFragment_to_nave1Fragment"
-            app:destination="@id/nave1Fragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_nave2Fragment"
-            app:destination="@id/nave2Fragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_nave3Fragment"
-            app:destination="@id/nave3Fragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_atraccionesFragment"
-            app:destination="@id/atraccionesFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_fechasImportantesFragment"
-            app:destination="@id/fechasImportantesFragment" />
-    </fragment>
+    app:startDestination="@id/mainFragment"> <fragment
+    android:id="@+id/mainFragment"
+    android:name="com.maestrocorona.appferia.MainFragment"
+    android:label="Feria Tabasco"
+    tools:layout="@layout/fragment_main"> <action
+    android:id="@+id/action_mainFragment_to_nave1Fragment"
+    app:destination="@id/nave1Fragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_nave2Fragment"
+        app:destination="@id/nave2Fragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_nave3Fragment"
+        app:destination="@id/nave3Fragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_atraccionesFragment"
+        app:destination="@id/atraccionesFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_fechasImportantesFragment"
+        app:destination="@id/fechasImportantesFragment" />
+</fragment>
 
     <fragment
         android:id="@+id/nave1Fragment"
         android:name="com.maestrocorona.appferia.Nave1Fragment"
         android:label="Negocios Nave 1"
-        tools:layout="@layout/fragment_detalle_nave" /> <fragment
-    android:id="@+id/nave2Fragment"
-    android:name="com.maestrocorona.appferia.Nave2Fragment"
-    android:label="Negocios Nave 2"
-    tools:layout="@layout/fragment_detalle_nave" />
+        tools:layout="@layout/fragment_detalle_nave" />
+
+    <fragment
+        android:id="@+id/nave2Fragment"
+        android:name="com.maestrocorona.appferia.Nave2Fragment"
+        android:label="Negocios Nave 2"
+        tools:layout="@layout/fragment_detalle_nave" />
 
     <fragment
         android:id="@+id/nave3Fragment"
@@ -55,4 +54,8 @@
         android:label="Fechas Importantes"
         tools:layout="@layout/fragment_fechas_importantes" />
 
-</navigation>
+    <fragment
+        android:id="@+id/catGalleryFragment"
+        android:name="com.maestrocorona.appferia.CatGalleryFragment"
+        android:label="Galería de Gatitos"
+        tools:layout="@layout/fragment_cat_gallery" /> </navigation>

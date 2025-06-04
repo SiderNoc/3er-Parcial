@@ -16,6 +16,7 @@ val drawerItemsList = listOf(
     DrawerItem(label = "Negocios Nave 2", destinationId = R.id.nave2Fragment),
     DrawerItem(label = "Negocios Nave 3", destinationId = R.id.nave3Fragment),
     DrawerItem(label = "Atracciones y Conciertos", destinationId = R.id.atraccionesFragment),
-    DrawerItem(label = "Fechas Importantes", destinationId = R.id.fechasImportantesFragment)
+    DrawerItem(label = "Fechas Importantes", destinationId = R.id.fechasImportantesFragment),
+    DrawerItem(label = "Galería de Gatitos", destinationId = R.id.catGalleryFragment) // <-- NUEVO ÍTEM AÑADIDO
     // Puedes añadir más ítems aquí si lo necesitas
 )

@@ -64,4 +64,24 @@ dependencies {
     // Para Compose con Navigation (opcional pero recomendado si usas NavController en Composables directamente)
     implementation("androidx.navigation:navigation-compose:$navVersion")
     // --- FIN DE NUEVAS DEPENDENCIAS ---
+
+        // ... tus dependencias existentes ...
+        implementation(libs.androidx.core.ktx)
+        // ... navigation, compose, etc. ...
+
+        // --- NUEVAS DEPENDENCIAS PARA THECATAPI ---
+        // Retrofit (para llamadas a la API)
+        implementation("com.squareup.retrofit2:retrofit:2.9.0") // O la última versión estable
+        implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Convertidor Gson para JSON
+
+        // Coil (para cargar imágenes en Compose)
+        implementation("io.coil-kt:coil-compose:2.6.0") // O la última versión estable
+        // --- FIN DE NUEVAS DEPENDENCIAS ---
+
+        // Lifecycle (para ViewModel y viewModelScope)
+        implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0") // O la última versión estable
+        // Fragment KTX (para el delegado by viewModels())
+        implementation("androidx.fragment:fragment-ktx:1.8.7") // O la última versión estable
+        implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.0") // O la última versión estable
+
 }

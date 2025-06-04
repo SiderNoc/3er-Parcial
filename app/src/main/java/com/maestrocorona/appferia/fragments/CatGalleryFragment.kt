@@ -1,4 +1,4 @@
-package com.maestrocorona.appferia
+package com.maestrocorona.appferia.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

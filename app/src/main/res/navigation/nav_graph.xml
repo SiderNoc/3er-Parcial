@@ -5,7 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainFragment"> <fragment
     android:id="@+id/mainFragment"
-    android:name="com.maestrocorona.appferia.MainFragment"
+    android:name="com.maestrocorona.appferia.fragments.MainFragment"
     android:label="Feria Tabasco"
     tools:layout="@layout/fragment_main"> <action
     android:id="@+id/action_mainFragment_to_nave1Fragment"
@@ -26,36 +26,36 @@
 
     <fragment
         android:id="@+id/nave1Fragment"
-        android:name="com.maestrocorona.appferia.Nave1Fragment"
+        android:name="com.maestrocorona.appferia.fragments.Nave1Fragment"
         android:label="Negocios Nave 1"
         tools:layout="@layout/fragment_detalle_nave" />
 
     <fragment
         android:id="@+id/nave2Fragment"
-        android:name="com.maestrocorona.appferia.Nave2Fragment"
+        android:name="com.maestrocorona.appferia.fragments.Nave2Fragment"
         android:label="Negocios Nave 2"
         tools:layout="@layout/fragment_detalle_nave" />
 
     <fragment
         android:id="@+id/nave3Fragment"
-        android:name="com.maestrocorona.appferia.Nave3Fragment"
+        android:name="com.maestrocorona.appferia.fragments.Nave3Fragment"
         android:label="Negocios Nave 3"
         tools:layout="@layout/fragment_detalle_nave" />
 
     <fragment
         android:id="@+id/atraccionesFragment"
-        android:name="com.maestrocorona.appferia.AtraccionesFragment"
+        android:name="com.maestrocorona.appferia.fragments.AtraccionesFragment"
         android:label="Atracciones y Conciertos"
         tools:layout="@layout/fragment_atracciones" />
 
     <fragment
         android:id="@+id/fechasImportantesFragment"
-        android:name="com.maestrocorona.appferia.FechasImportantesFragment"
+        android:name="com.maestrocorona.appferia.fragments.FechasImportantesFragment"
         android:label="Fechas Importantes"
         tools:layout="@layout/fragment_fechas_importantes" />
 
     <fragment
         android:id="@+id/catGalleryFragment"
-        android:name="com.maestrocorona.appferia.CatGalleryFragment"
+        android:name="com.maestrocorona.appferia.fragments.CatGalleryFragment"
         android:label="Galería de Gatitos"
         tools:layout="@layout/fragment_cat_gallery" /> </navigation>

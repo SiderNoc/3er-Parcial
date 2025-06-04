@@ -1,4 +1,4 @@
-package com.maestrocorona.appferia
+package com.maestrocorona.appferia.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,9 +25,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import com.maestrocorona.appferia.R
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 
-class Nave3Fragment : Fragment() {
+class Nave1Fragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,7 +36,7 @@ class Nave3Fragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 AppFeriaTheme {
-                    DetalleNave3Screen()
+                    DetalleNave1Screen() // Composable específico para Nave 1
                 }
             }
         }
@@ -43,11 +44,11 @@ class Nave3Fragment : Fragment() {
 }
 
 @Composable
-fun DetalleNave3Screen() {
+fun DetalleNave1Screen() {
     val context = LocalContext.current
-    val naveName = "Negocios de la Nave 3"
-    val imageResource = R.drawable.imagen_nave_3 // Imagen específica [cite: 12]
-    val loremIpsumText = context.getString(R.string.lorem_ipsum_3) // Texto específico [cite: 23, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]
+    val naveName = "Negocios de la Nave 1"
+    val imageResource = R.drawable.imagen_nave_1 // Imagen específica [cite: 10]
+    val loremIpsumText = context.getString(R.string.lorem_ipsum_1) // Texto específico [cite: 23, 48]
 
     Column(
         modifier = Modifier

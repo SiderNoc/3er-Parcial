@@ -1,4 +1,4 @@
-package com.maestrocorona.appferia
+package com.maestrocorona.appferia.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.maestrocorona.appferia.R
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 
 // La data class Artista ya la tienes definida en AtraccionesActivity.kt,

@@ -1,4 +1,4 @@
-package com.maestrocorona.appferia
+package com.maestrocorona.appferia.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 
 
@@ -36,7 +35,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme // Necesitarás este import
 import androidx.compose.material3.Text
-import androidx.compose.ui.unit.dp
+import com.maestrocorona.appferia.R
 
 class MainFragment : Fragment() {
 

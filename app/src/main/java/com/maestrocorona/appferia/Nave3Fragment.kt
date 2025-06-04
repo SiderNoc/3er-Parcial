@@ -1,8 +1,9 @@
 package com.maestrocorona.appferia
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,45 +17,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.Fragment
+import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 
-class DetalleNaveActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Obtiene los datos del intent
-        val naveName = intent.getStringExtra("NAVE_NAME") ?: "Default Name"
-        val imageResource = intent.getIntExtra("IMAGE_RESOURCE", R.drawable.logo_rest)
-        setContent {
-            // Muestra el contenido de la pantalla
-            DetalleNaveScreen(naveName, imageResource)
+class Nave3Fragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                AppFeriaTheme {
+                    DetalleNave3Screen()
+                }
+            }
         }
     }
 }
 
 @Composable
-fun DetalleNaveScreen(naveName: String, imageResource: Int) {
+fun DetalleNave3Screen() {
     val context = LocalContext.current
-    // Determina el texto de Lorem Ipsum según el nombre de la nave
-    val loremIpsumText = when (naveName) {
-        "Negocios de la Nave 1" -> context.getString(R.string.lorem_ipsum_1)
-        "Negocios de la Nave 2" -> context.getString(R.string.lorem_ipsum_2)
-        "Negocios de la Nave 3" -> context.getString(R.string.lorem_ipsum_3)
-        else -> context.getString(R.string.lorem_ipsum_default)
-    }
+    val naveName = "Negocios de la Nave 3"
+    val imageResource = R.drawable.imagen_nave_3 // Imagen específica [cite: 12]
+    val loremIpsumText = context.getString(R.string.lorem_ipsum_3) // Texto específico [cite: 23, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]
 
-    // Organizar los elementos en una columna
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Imagen rectangular con bordes redondeados
         Image(
             painter = painterResource(id = imageResource),
             contentDescription = "Imagen de $naveName",
@@ -65,7 +64,6 @@ fun DetalleNaveScreen(naveName: String, imageResource: Int) {
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(16.dp))
-        // Titulo
         Text(
             text = naveName,
             fontSize = 24.sp,
@@ -74,17 +72,10 @@ fun DetalleNaveScreen(naveName: String, imageResource: Int) {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        // Texto de Lorem ipsum
         Text(
             text = loremIpsumText,
             fontSize = 16.sp,
             textAlign = TextAlign.Justify
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DetalleNavePreview() {
-    DetalleNaveScreen(naveName = "Negocios de la Nave 3", imageResource = R.drawable.imagen_nave_3)
 }

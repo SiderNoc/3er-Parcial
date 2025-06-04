@@ -1,8 +1,9 @@
 package com.maestrocorona.appferia
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,33 +30,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 
-class AtraccionesActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            AtraccionesScreen(onBackPressed = { finish() })//onBackPressed finaliza la actividad
+// La data class Artista ya la tienes definida en AtraccionesActivity.kt,
+// puedes moverla a un archivo común o aquí si solo se usa en esta pantalla.
+// Por ahora, la copiamos aquí para que el Fragment sea autocontenido.
+data class Artista(val name: String, val date: String, val imageResource: Int) // Definida en el archivo original [cite: 29]
+
+class AtraccionesFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                AppFeriaTheme {
+                    // Pasamos una lambda para que el Composable pueda invocar la navegación hacia atrás
+                    AtraccionesScreenContent(onBackPressed = {
+                        findNavController().popBackStack() // Navega hacia atrás en la pila de Fragments
+                    })
+                }
+            }
         }
     }
 }
-//Clase para los artistas
-data class Artista(val name: String, val date: String, val imageResource: Int)
 
+// Renombramos el Composable original para evitar confusión si mueves Artista
 @Composable
-fun AtraccionesScreen(onBackPressed: () -> Unit) {
+fun AtraccionesScreenContent(onBackPressed: () -> Unit) {
     val artists = listOf(
         Artista("Los Angeles Azules", "Mayo-15", R.drawable.angeles_azules_artista),
         Artista("Shakira", "Mayo-15", R.drawable.shakira_artista),
@@ -60,7 +77,7 @@ fun AtraccionesScreen(onBackPressed: () -> Unit) {
         Artista("Pablo Alboran", "Mayo-18", R.drawable.pablo_artista),
         Artista("La Sonora Dinamita", "Mayo-19", R.drawable.sonora_dinamita_artista),
         Artista("Daddy Yankee", "Mayo-20", R.drawable.daddy_yankee_artista)
-    )
+    ) // [cite: 29]
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -70,7 +87,7 @@ fun AtraccionesScreen(onBackPressed: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally // Centramos los elementos horizontalmente dentro de la Column
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Atracciones y Conciertos",
@@ -80,25 +97,24 @@ fun AtraccionesScreen(onBackPressed: () -> Unit) {
                 ),
                 fontSize = 24.sp,
                 modifier = Modifier
-                    .padding(bottom = 16.dp,
-                        top = 16.dp)
-                    .fillMaxWidth() // Ocupamos el ancho máximo disponible
-                    .wrapContentWidth(Alignment.Start), // Alineamos el contenido del Text a la izquierda
+                    .padding(bottom = 16.dp, top = 16.dp)
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.Start),
                 textAlign = TextAlign.Left
-            )
+            ) // [cite: 31, 32, 33]
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(artists) { artist ->
                     ArtistasRow(artist = artist)
                 }
-            }//Boton para volver
-            Button(onClick = onBackPressed) {
+            } // [cite: 34]
+            Button(onClick = onBackPressed) { // El onClick ahora usa la lambda proporcionada
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Volver"
-                    )
+                    ) // [cite: 35, 36]
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Atrás")
                 }
@@ -107,8 +123,8 @@ fun AtraccionesScreen(onBackPressed: () -> Unit) {
     }
 }
 
-
-//Clase para la card de los artistas
+// ArtistasRow Composable (copiado de tu AtraccionesActivity.kt)
+// Asegúrate de que la data class Artista esté accesible (definida arriba o en un archivo común)
 @Composable
 fun ArtistasRow(artist: Artista) {
     Card(
@@ -119,7 +135,7 @@ fun ArtistasRow(artist: Artista) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp), // [cite: 38]
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -127,31 +143,26 @@ fun ArtistasRow(artist: Artista) {
                 contentDescription = "Artistas",
                 modifier = Modifier
                     .size(60.dp)
-                    .clip(CircleShape),
+                    .clip(CircleShape), // [cite: 39]
                 contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .weight(1f)
+                    .weight(1f) // [cite: 40]
             ) {
-                Text(text = artist.name,
-                    fontSize = 20.sp,
+                Text(
+                    text = artist.name,
+                    fontSize = 20.sp, // [cite: 41]
                     fontWeight = FontWeight.SemiBold)
             }
             Text(text = artist.date,
                 modifier = Modifier.padding(end = 10.dp),
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 16.sp, // [cite: 42]
                     fontStyle = FontStyle.Italic
                 )
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AtraccionesPreview() {
-    AtraccionesScreen(onBackPressed = { /* Do nothing in preview */ })
 }

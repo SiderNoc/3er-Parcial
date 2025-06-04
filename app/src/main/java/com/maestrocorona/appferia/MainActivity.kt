@@ -1,187 +1,167 @@
 package com.maestrocorona.appferia
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.* // Incluye ExperimentalMaterial3Api para los componentes
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.unit.dp // Para el padding en AppDrawerContent
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.fragment.app.FragmentActivity
+// import androidx.fragment.app.FragmentContainerView // No es necesario si se usa el nombre completo calificado
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState // Para el estado seleccionado del drawer
+import androidx.navigation.fragment.NavHostFragment
+import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.getValue
+import androidx.navigation.NavBackStackEntry
 
-class MainActivity : ComponentActivity() {
+// Asumimos que DrawerConfig.kt está en el mismo paquete y define:
+// data class DrawerItem(val label: String, val destinationId: Int)
+// val drawerItemsList: List<DrawerItem>
+
+class MainActivity : FragmentActivity() {
+
+    private var navController: NavController? = null
+
+    @OptIn(ExperimentalMaterial3Api::class) // Necesario para TopAppBar, ModalNavigationDrawer, etc.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen(
-                onNavigateToSecondActivity = {
-                    // Navegar a Activity2
-                    startActivity(Intent(this, Activity2::class.java))
-                },// Navegar a DetalleNaveActivity
-                onNavigateToDetalleNave = { naveName, imageResource ->
-                    // pasa los datos a DetalleNaveActivity
-                    val intent = Intent(this, DetalleNaveActivity::class.java).apply {
-                        putExtra("NAVE_NAME", naveName)
-                        putExtra("IMAGE_RESOURCE", imageResource)
+            AppFeriaTheme {
+                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+                val scope = rememberCoroutineScope()
+
+                // --- INICIO DE LA CORRECCIÓN ---
+                // 1. Obtenemos el State<NavBackStackEntry?> de forma segura.
+                //    Si navController es null, currentNavBackStackEntryAsState será null.
+                val currentNavBackStackEntryAsState: State<NavBackStackEntry?>? = navController?.currentBackStackEntryAsState()
+
+                // 2. Obtenemos el valor (NavBackStackEntry?) del State, también de forma segura.
+                //    Si currentNavBackStackEntryAsState es null, navBackStackEntry será null.
+                val navBackStackEntry: NavBackStackEntry? = currentNavBackStackEntryAsState?.value
+
+                // 3. Obtenemos el ID de la ruta actual.
+                //    Si navBackStackEntry es null, currentRouteId será null.
+                val currentRouteId: Int? = navBackStackEntry?.destination?.id
+                // --- FIN DE LA CORRECCIÓN ---
+
+                ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = {
+                        AppDrawerContent(
+                            currentRouteId = currentRouteId,
+                            onNavigateToRoute = { destinationId ->
+                                // Cerramos el drawer ANTES de navegar
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                // Evitamos navegar al mismo destino si ya estamos en él
+                                if (navController?.currentDestination?.id != destinationId) {
+                                    navController?.navigate(destinationId)
+                                }
+                            }
+                            // onCloseDrawer ya no es necesario como parámetro separado si onNavigateToRoute lo maneja
+                        )
                     }
-                    startActivity(intent)
-                },// Navegar a AtraccionesActivity
-                onNavigateToAtracciones = {
-                    startActivity(Intent(this, AtraccionesActivity::class.java))
+                ) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            TopAppBar(
+                                title = { Text("Feria Tabasco") },
+                                navigationIcon = {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            if (drawerState.isClosed) {
+                                                drawerState.open()
+                                            } else {
+                                                drawerState.close()
+                                            }
+                                        }
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Menu,
+                                            contentDescription = "Abrir menú de navegación"
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    ) { innerPadding ->
+                        AndroidView(
+                            factory = { context ->
+                                // Usamos el nombre completamente calificado para FragmentContainerView
+                                androidx.fragment.app.FragmentContainerView(context).apply {
+                                    id = R.id.nav_host_fragment_container // ID definido en res/values/ids.xml
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding), // Aplicamos el padding del Scaffold
+                            update = { fragmentContainerView ->
+                                val fragmentManager = supportFragmentManager
+                                val existingFragment = fragmentManager.findFragmentById(fragmentContainerView.id)
+
+                                val navHostFragmentInstance = if (existingFragment != null) {
+                                    existingFragment as NavHostFragment
+                                } else {
+                                    NavHostFragment.create(R.navigation.nav_graph).also {
+                                        fragmentManager.beginTransaction()
+                                            .replace(fragmentContainerView.id, it)
+                                            .setPrimaryNavigationFragment(it)
+                                            .commitNow()
+                                    }
+                                }
+                                // Asignamos el navController si aún no lo hemos hecho
+                                if (this@MainActivity.navController == null) {
+                                    this@MainActivity.navController = navHostFragmentInstance.navController
+                                }
+                            }
+                        )
+                    }
                 }
-            )
+            }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class) // Para ModalDrawerSheet y NavigationDrawerItem
 @Composable
-fun MainScreen(
-    onNavigateToSecondActivity: () -> Unit,
-    onNavigateToDetalleNave: (String, Int) -> Unit,
-    onNavigateToAtracciones: () -> Unit
+fun AppDrawerContent(
+    currentRouteId: Int?,
+    onNavigateToRoute: (Int) -> Unit
+    // onCloseDrawer no es necesario si onNavigateToRoute ya cierra el drawer
 ) {
-    // Main screen
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {//titulo
+    ModalDrawerSheet { // Contenedor estilizado para el contenido del drawer
+        Column(modifier = Modifier.padding(vertical = 12.dp)) {
             Text(
-                text = "FERIA TABASCO\n2025",
-                style = TextStyle(
-                    color = colorResource(id = R.color.purple_40),
-                    fontWeight = FontWeight.Bold
-                ),
-                fontSize = 40.sp,
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.Start), // Alineamos el contenido del Text a la izquierda
-                textAlign = TextAlign.Left
-            )
-            // Business items con su nombre, imagen y onNavigate a la actividad correspondiente
-            BusinessItem(
-                text = "Negocios de la Nave 1",
-                imageResource = R.drawable.imagen_nave_1,
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 1", R.drawable.imagen_nave_1) }
-            )
-            BusinessItem(
-                text = "Negocios de la Nave 2",
-                imageResource = R.drawable.imagen_nave_2,
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 2", R.drawable.imagen_nave_2) }
-            )
-            BusinessItem(
-                text = "Negocios de la Nave 3",
-                imageResource = R.drawable.imagen_nave_3,
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 3", R.drawable.imagen_nave_3) }
-            )
-            BusinessItem(
-                text = "Atracciones y Conciertos",
-                imageResource = R.drawable.imagen_conciertos,
-                onNavigate = { onNavigateToAtracciones() }//Este es el botonAtracciones diferente a las otras cards
+                "Menú Feria Tabasco",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)
             )
 
-            // Boton para navegar a la Activity2
-            Button(
-                onClick = onNavigateToSecondActivity,
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text("Fechas importantes")
-            }
-        }
-    }
-}
-
-@Composable
-fun BusinessItem(text: String, imageResource: Int, onNavigate: () -> Unit) {
-    // Card reutilizable
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.purple_80)
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Imagen de la nave
-            Image(
-                painter = painterResource(id = imageResource),
-                contentDescription = "Imagen de $text",
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(8.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            // Texto de la card
-            Text(
-                text = text,
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .weight(1f),
-                style = TextStyle(
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    color = colorResource(id = R.color.purple_40)
+            // drawerItemsList se toma de tu archivo DrawerConfig.kt
+            drawerItemsList.forEach { item ->
+                NavigationDrawerItem(
+                    label = { Text(item.label) },
+                    selected = item.destinationId == currentRouteId,
+                    onClick = {
+                        onNavigateToRoute(item.destinationId)
+                        // No es necesario llamar a onCloseDrawer aquí si la lambda
+                        // onNavigateToRoute en MainActivity ya lo hace.
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding) // Padding estándar para ítems
                 )
-            )
-            // Botón "Ver más"
-            FilledTonalButton(onClick = onNavigate,
-                modifier = Modifier.padding(end = 8.dp)) {
-                Text("Ver más")
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewMyApp() {
-    MainScreen(onNavigateToSecondActivity = { /* nada */ },
-        onNavigateToDetalleNave = { _, _ -> /* nada */ },
-        onNavigateToAtracciones = { /* nada */ })
 }

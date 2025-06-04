@@ -56,4 +56,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // --- NUEVAS DEPENDENCIAS PARA NAVIGATION COMPONENT ---
+    val navVersion = "2.7.7" // Puedes usar la última versión estable
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    // Para Compose con Navigation (opcional pero recomendado si usas NavController en Composables directamente)
+    implementation("androidx.navigation:navigation-compose:$navVersion")
+    // --- FIN DE NUEVAS DEPENDENCIAS ---
 }

@@ -24,19 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name=".Activity2"
-            android:exported="false"
-            android:theme="@style/Theme.AppFeria" />
 
-        <activity
-            android:name=".DetalleNaveActivity"
-            android:exported="false" />
 
-        <activity
-            android:name=".AtraccionesActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

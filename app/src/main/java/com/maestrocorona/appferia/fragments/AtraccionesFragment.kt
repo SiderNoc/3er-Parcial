@@ -113,19 +113,7 @@ fun AtraccionesScreenContent() {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Atracciones y Conciertos",
-                style = TextStyle(
-                    color = colorResource(id = R.color.purple_40),
-                    fontWeight = FontWeight.Bold
-                ),
-                fontSize = 24.sp,
-                modifier = Modifier
-                    .padding(bottom = 16.dp, top = 16.dp)
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.Start),
-                textAlign = TextAlign.Left
-            ) // [cite: 31, 32, 33]
+
             LazyColumn(
                 modifier = Modifier.weight(1f), // Para que ocupe el espacio disponible
                 contentPadding = PaddingValues(vertical = 8.dp), // Padding arriba y abajo de toda la lista

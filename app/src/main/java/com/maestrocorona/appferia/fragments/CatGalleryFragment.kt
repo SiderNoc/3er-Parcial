@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -33,6 +35,7 @@ import androidx.fragment.app.viewModels // Para el delegado by viewModels()
 import androidx.lifecycle.compose.collectAsStateWithLifecycle // Para observar StateFlows
 import coil.compose.AsyncImage // Para cargar imágenes con Coil
 import coil.request.ImageRequest
+import com.maestrocorona.appferia.R
 import com.maestrocorona.appferia.model.CatImage
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 import com.maestrocorona.appferia.viewmodel.CatGalleryViewModel
@@ -79,6 +82,7 @@ fun CatGalleryScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(colorResource(id= R.color.white))
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -121,6 +125,7 @@ fun CatGalleryScreenContent(
                 items(catImages, key = { catImage -> catImage.id }) { catImage ->
                     CatImageItem(catImage)
                 }
+
             }
         }
     }

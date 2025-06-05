@@ -14,15 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp // Para el padding en AppDrawerContent
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
-// import androidx.fragment.app.FragmentContainerView // No es necesario si se usa el nombre completo calificado
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState // Para el estado seleccionado del drawer
 import androidx.navigation.fragment.NavHostFragment
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavBackStackEntry
-
 import androidx.compose.foundation.Image // Necesario para el Composable Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,38 +29,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale // Para controlar cómo se escala la imagen
 import androidx.compose.ui.res.painterResource // Para cargar la imagen desde drawable
-
 import androidx.compose.ui.res.colorResource
-// Asumimos que DrawerConfig.kt está en el mismo paquete y define:
-// data class DrawerItem(val label: String, val destinationId: Int)
-// val drawerItemsList: List<DrawerItem>
-
-
-import androidx.activity.compose.setContent
-// ... otros imports ...
 import androidx.compose.material3.CenterAlignedTopAppBar // ¡NUEVO IMPORT!
 import androidx.compose.material3.ExperimentalMaterial3Api // Ya deberías tenerlo
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults // Opcional, para colores
-
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.getValue
-
 import androidx.compose.ui.text.font.FontWeight // ¡NUEVO IMPORT para Negrita!
 
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.* // Importa Box, Column, etc.
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.currentBackStackEntryAsState
-// ... el resto de tus imports (AndroidView, NavHostFragment, AppFeriaTheme, etc.) ...
-import com.maestrocorona.appferia.ui.theme.AppFeriaTheme // Asegúrate que esté
+import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 import kotlinx.coroutines.launch
-
-
-import androidx.compose.ui.res.colorResource // Para
 class MainActivity : FragmentActivity() {
 
-    private var navController: NavController? = null
+    // Ya no necesitamos esta propiedad de clase para el NavController usado en Compose.
+    // private var navController: NavController? = null
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,21 +65,22 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
         setContent {
             AppFeriaTheme {
+                // --- INICIO DE CAMBIOS IMPORTANTES ---
+                // 1. Creamos un estado para el NavController dentro de Compose
+                var navControllerState by remember { mutableStateOf<NavController?>(null) }
+                // --- FIN DE CAMBIOS IMPORTANTES ---
+
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
 
-                // Observamos la entrada actual de la pila de navegación
+                // Observamos la entrada actual de la pila de navegación USANDO navControllerState
                 val currentNavBackStackEntryAsState: State<NavBackStackEntry?>? =
-                    navController?.currentBackStackEntryAsState()
+                    navControllerState?.currentBackStackEntryAsState() // Usamos navControllerState
                 val navBackStackEntry: NavBackStackEntry? = currentNavBackStackEntryAsState?.value
 
-                // Obtenemos el ID de la ruta actual para la selección del drawer
                 val currentRouteId: Int? = navBackStackEntry?.destination?.id
-
-                // Obtenemos el LABEL del destino actual para el título de la TopAppBar
-                // Usamos el label definido en nav_graph.xml. Si es null, ponemos un título por defecto.
                 val currentScreenLabel =
-                    navBackStackEntry?.destination?.label?.toString() ?: getString(R.string.app_name) // Título por defecto desde strings.xml
+                    navBackStackEntry?.destination?.label?.toString() ?: getString(R.string.app_name)
 
                 ModalNavigationDrawer(
                     drawerState = drawerState,
@@ -96,8 +91,9 @@ class MainActivity : FragmentActivity() {
                                 scope.launch {
                                     drawerState.close()
                                 }
-                                if (navController?.currentDestination?.id != destinationId) {
-                                    navController?.navigate(destinationId)
+                                // Usamos navControllerState para navegar
+                                if (navControllerState?.currentDestination?.id != destinationId) {
+                                    navControllerState?.navigate(destinationId)
                                 }
                             }
                         )
@@ -106,34 +102,28 @@ class MainActivity : FragmentActivity() {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
-                            CenterAlignedTopAppBar( // <-- CAMBIADO A CenterAlignedTopAppBar
+                            CenterAlignedTopAppBar(
                                 title = {
                                     Text(
-                                        text = currentScreenLabel,
-                                        fontWeight = FontWeight.Bold // Letras en Negrita
+                                        text = currentScreenLabel, // Texto de la TopBar
+                                        fontWeight = FontWeight.ExtraBold,
+                                        fontSize = 30.sp,
+                                        color = colorResource(id=R.color.yellow)
                                     )
                                 },
                                 navigationIcon = {
                                     IconButton(onClick = {
                                         scope.launch {
-                                            if (drawerState.isClosed) {
-                                                drawerState.open()
-                                            } else {
-                                                drawerState.close()
-                                            }
+                                            if (drawerState.isClosed) drawerState.open() else drawerState.close()
                                         }
                                     }) {
                                         Icon(
-                                            imageVector = Icons.Filled.Menu,
-                                            contentDescription = "Abrir menú de navegación"
+                                            Icons.Filled.Menu,
+                                            contentDescription = "Abrir menú de navegación",
+                                            modifier = Modifier.size(45.dp)
                                         )
                                     }
                                 }
-                                // Opcional: Puedes personalizar los colores de la CenterAlignedTopAppBar
-                                // colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                                //    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                //    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                // )
                             )
                         }
                     ) { innerPadding ->
@@ -159,9 +149,12 @@ class MainActivity : FragmentActivity() {
                                             .commitNow()
                                     }
                                 }
-                                if (this@MainActivity.navController == null) {
-                                    this@MainActivity.navController = navHostFragmentInstance.navController
+                                // --- INICIO DE CAMBIOS IMPORTANTES ---
+                                // 2. Actualizamos el ESTADO del NavController
+                                if (navControllerState == null) { // Solo asigna si aún es null para evitar reasignaciones innecesarias
+                                    navControllerState = navHostFragmentInstance.navController
                                 }
+                                // --- FIN DE CAMBIOS IMPORTANTES ---
                             }
                         )
                     }
@@ -170,7 +163,8 @@ class MainActivity : FragmentActivity() {
         }
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
+
 @Composable
 fun AppDrawerContent(
     currentRouteId: Int?,
@@ -209,7 +203,9 @@ fun AppDrawerContent(
                 Text(
                     text = "Bienvenid@!",
                     // Usamos .copy() para cambiar solo el color del estilo existente
-                    style = MaterialTheme.typography.titleLarge.copy(colorResource(id = R.color.white)), // Texto en blanco
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color =(colorResource(id = R.color.white)) // Texto en blanco
                 )
             }
 
@@ -234,12 +230,12 @@ fun AppDrawerContent(
                             unselectedContainerColor = Color.Transparent,
 
                             // 2. Usar tu color de colors.xml para el fondo del ítem SELECCIONADO
-                            selectedContainerColor = colorResource(id = R.color.purple_80)
+                            selectedContainerColor = colorResource(id = R.color.light_purple),
 
                             // Opcional: Ajustar colores de texto e iconos si el contraste no es bueno
                             // con los nuevos fondos. Por ejemplo, si el texto seleccionado necesita ser más oscuro:
-                            // selectedTextColor = Color.Black, // O un color de tu MaterialTheme
-                            // selectedIconColor = Color.Black, // O un color de tu MaterialTheme
+                            selectedTextColor = colorResource(id = R.color.white), // O un color de tu MaterialTheme
+                            selectedIconColor = colorResource(id= R.color.white), // O un color de tu MaterialTheme
                             // unselectedTextColor = MaterialTheme.colorScheme.onSurface, // Color de texto por defecto sobre surface
                             // unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant // Color de icono por defecto
 

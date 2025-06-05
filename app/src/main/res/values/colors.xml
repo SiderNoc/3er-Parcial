@@ -11,6 +11,9 @@
     <color name="purple_40">#FF6650a4</color>
     <color name="purple_80">#FFD0BCFF</color>
     <color name="dark_purple">#935B89</color>
+    <color name="light_purple">#B88AAD</color>
+    <color name="light_purple2">#DEC7D7</color>
     <color name="grey">#FF444444</color>
     <color name="purple_90">#E9E1FF</color>
+    <color name="yellow">#f4d03f</color>
 </resources>

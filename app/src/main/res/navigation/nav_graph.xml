@@ -6,8 +6,7 @@
     app:startDestination="@id/mainFragment"> <fragment
     android:id="@+id/mainFragment"
     android:name="com.maestrocorona.appferia.fragments.MainFragment"
-    android:label="Feria Tabasco"
-    tools:layout="@layout/fragment_main"> <action
+    android:label="Inicio" tools:layout="@layout/fragment_main"> <action
     android:id="@+id/action_mainFragment_to_nave1Fragment"
     app:destination="@id/nave1Fragment" />
     <action
@@ -58,4 +57,6 @@
         android:id="@+id/catGalleryFragment"
         android:name="com.maestrocorona.appferia.fragments.CatGalleryFragment"
         android:label="Galería de Gatitos"
-        tools:layout="@layout/fragment_cat_gallery" /> </navigation>
+        tools:layout="@layout/fragment_cat_gallery" />
+
+</navigation>

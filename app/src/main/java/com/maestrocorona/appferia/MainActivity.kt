@@ -38,12 +38,34 @@ import androidx.compose.ui.res.colorResource
 // data class DrawerItem(val label: String, val destinationId: Int)
 // val drawerItemsList: List<DrawerItem>
 
+
+import androidx.activity.compose.setContent
+// ... otros imports ...
+import androidx.compose.material3.CenterAlignedTopAppBar // ¡NUEVO IMPORT!
+import androidx.compose.material3.ExperimentalMaterial3Api // Ya deberías tenerlo
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults // Opcional, para colores
+
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.getValue
+
+import androidx.compose.ui.text.font.FontWeight // ¡NUEVO IMPORT para Negrita!
+
+import androidx.navigation.compose.currentBackStackEntryAsState
+// ... el resto de tus imports (AndroidView, NavHostFragment, AppFeriaTheme, etc.) ...
+import com.maestrocorona.appferia.ui.theme.AppFeriaTheme // Asegúrate que esté
+import kotlinx.coroutines.launch
+
+
 import androidx.compose.ui.res.colorResource // Para
 class MainActivity : FragmentActivity() {
 
     private var navController: NavController? = null
 
-    @OptIn(ExperimentalMaterial3Api::class) // Necesario para TopAppBar, ModalNavigationDrawer, etc.
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -51,9 +73,19 @@ class MainActivity : FragmentActivity() {
             AppFeriaTheme {
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
-                val currentNavBackStackEntryAsState: State<NavBackStackEntry?>? = navController?.currentBackStackEntryAsState()
+
+                // Observamos la entrada actual de la pila de navegación
+                val currentNavBackStackEntryAsState: State<NavBackStackEntry?>? =
+                    navController?.currentBackStackEntryAsState()
                 val navBackStackEntry: NavBackStackEntry? = currentNavBackStackEntryAsState?.value
+
+                // Obtenemos el ID de la ruta actual para la selección del drawer
                 val currentRouteId: Int? = navBackStackEntry?.destination?.id
+
+                // Obtenemos el LABEL del destino actual para el título de la TopAppBar
+                // Usamos el label definido en nav_graph.xml. Si es null, ponemos un título por defecto.
+                val currentScreenLabel =
+                    navBackStackEntry?.destination?.label?.toString() ?: getString(R.string.app_name) // Título por defecto desde strings.xml
 
                 ModalNavigationDrawer(
                     drawerState = drawerState,
@@ -61,24 +93,26 @@ class MainActivity : FragmentActivity() {
                         AppDrawerContent(
                             currentRouteId = currentRouteId,
                             onNavigateToRoute = { destinationId ->
-                                // Cerramos el drawer ANTES de navegar
                                 scope.launch {
                                     drawerState.close()
                                 }
-                                // Evitamos navegar al mismo destino si ya estamos en él
                                 if (navController?.currentDestination?.id != destinationId) {
                                     navController?.navigate(destinationId)
                                 }
                             }
-                            // onCloseDrawer ya no es necesario como parámetro separado si onNavigateToRoute lo maneja
                         )
                     }
                 ) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
-                            TopAppBar(
-                                title = { Text("Feria Tabasco") },
+                            CenterAlignedTopAppBar( // <-- CAMBIADO A CenterAlignedTopAppBar
+                                title = {
+                                    Text(
+                                        text = currentScreenLabel,
+                                        fontWeight = FontWeight.Bold // Letras en Negrita
+                                    )
+                                },
                                 navigationIcon = {
                                     IconButton(onClick = {
                                         scope.launch {
@@ -95,23 +129,26 @@ class MainActivity : FragmentActivity() {
                                         )
                                     }
                                 }
+                                // Opcional: Puedes personalizar los colores de la CenterAlignedTopAppBar
+                                // colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                                //    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                //    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                // )
                             )
                         }
                     ) { innerPadding ->
                         AndroidView(
                             factory = { context ->
-                                // Usamos el nombre completamente calificado para FragmentContainerView
                                 androidx.fragment.app.FragmentContainerView(context).apply {
-                                    id = R.id.nav_host_fragment_container // ID definido en res/values/ids.xml
+                                    id = R.id.nav_host_fragment_container
                                 }
                             },
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(innerPadding), // Aplicamos el padding del Scaffold
+                                .padding(innerPadding),
                             update = { fragmentContainerView ->
                                 val fragmentManager = supportFragmentManager
                                 val existingFragment = fragmentManager.findFragmentById(fragmentContainerView.id)
-
                                 val navHostFragmentInstance = if (existingFragment != null) {
                                     existingFragment as NavHostFragment
                                 } else {
@@ -122,7 +159,6 @@ class MainActivity : FragmentActivity() {
                                             .commitNow()
                                     }
                                 }
-                                // Asignamos el navController si aún no lo hemos hecho
                                 if (this@MainActivity.navController == null) {
                                     this@MainActivity.navController = navHostFragmentInstance.navController
                                 }

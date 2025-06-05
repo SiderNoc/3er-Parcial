@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,17 +38,41 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.maestrocorona.appferia.R
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
+// ... (otros imports que ya tienes)
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.shape.RoundedCornerShape // Para esquinas redondeadas
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider // Para la línea divisoria
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color // Para el color de fondo del círculo de imagen
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.maestrocorona.appferia.ui.theme.Purple80 // Usando un color de tu tema
+import com.maestrocorona.appferia.ui.theme.PurpleGrey80
+
 
 // La data class Artista ya la tienes definida en AtraccionesActivity.kt,
 // puedes moverla a un archivo común o aquí si solo se usa en esta pantalla.
 // Por ahora, la copiamos aquí para que el Fragment sea autocontenido.
-data class Artista(val name: String, val date: String, val imageResource: Int) // Definida en el archivo original [cite: 29]
+data class Artista(
+    val name: String,
+    val date: String,
+    val time: String,
+    val imageResource: Int)
 
 class AtraccionesFragment : Fragment() {
     override fun onCreateView(
@@ -57,28 +82,26 @@ class AtraccionesFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 AppFeriaTheme {
-                    // Pasamos una lambda para que el Composable pueda invocar la navegación hacia atrás
-                    AtraccionesScreenContent(onBackPressed = {
-                        findNavController().popBackStack() // Navega hacia atrás en la pila de Fragments
-                    })
+                    AtraccionesScreenContent()
                 }
             }
         }
     }
 }
 
+
 // Renombramos el Composable original para evitar confusión si mueves Artista
 @Composable
-fun AtraccionesScreenContent(onBackPressed: () -> Unit) {
+fun AtraccionesScreenContent() {
     val artists = listOf(
-        Artista("Los Angeles Azules", "Mayo-15", R.drawable.angeles_azules_artista),
-        Artista("Shakira", "Mayo-15", R.drawable.shakira_artista),
-        Artista("Robleis", "Mayo-16", R.drawable.robleis_artista),
-        Artista("Miranda!", "Mayo-17", R.drawable.miranda_artista),
-        Artista("Pablo Alboran", "Mayo-18", R.drawable.pablo_artista),
-        Artista("La Sonora Dinamita", "Mayo-19", R.drawable.sonora_dinamita_artista),
-        Artista("Daddy Yankee", "Mayo-20", R.drawable.daddy_yankee_artista)
-    ) // [cite: 29]
+        Artista("Los Angeles Azules", "Mayo-15", "10:00 PM", R.drawable.angeles_azules_artista),
+        Artista("Shakira", "Mayo-15", "09:00 PM", R.drawable.shakira_artista),
+        Artista("Robleis", "Mayo-16", "08:00 PM", R.drawable.robleis_artista),
+        Artista("Miranda!", "Mayo-17", "10:30 PM", R.drawable.miranda_artista),
+        Artista("Pablo Alboran", "Mayo-18", "09:30 PM", R.drawable.pablo_artista),
+        Artista("La Sonora Dinamita", "Mayo-19", "11:00 PM", R.drawable.sonora_dinamita_artista),
+        Artista("Daddy Yankee", "Mayo-20", "10:00 PM", R.drawable.daddy_yankee_artista)
+    )
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -103,67 +126,124 @@ fun AtraccionesScreenContent(onBackPressed: () -> Unit) {
                     .wrapContentWidth(Alignment.Start),
                 textAlign = TextAlign.Left
             ) // [cite: 31, 32, 33]
-            LazyColumn(modifier = Modifier.weight(1f)) {
+            LazyColumn(
+                modifier = Modifier.weight(1f), // Para que ocupe el espacio disponible
+                contentPadding = PaddingValues(vertical = 8.dp), // Padding arriba y abajo de toda la lista
+                verticalArrangement = Arrangement.spacedBy(12.dp) // <--- ¡ESTA LÍNEA ES CLAVE!
+            ) {
                 items(artists) { artist ->
                     ArtistasRow(artist = artist)
                 }
-            } // [cite: 34]
-            Button(onClick = onBackPressed) { // El onClick ahora usa la lambda proporcionada
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver"
-                    ) // [cite: 35, 36]
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Atrás")
-                }
             }
+
+
         }
     }
 }
 
-// ArtistasRow Composable (copiado de tu AtraccionesActivity.kt)
-// Asegúrate de que la data class Artista esté accesible (definida arriba o en un archivo común)
+
 @Composable
 fun ArtistasRow(artist: Artista) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(horizontal = 4.dp), // Padding horizontal para la tarjeta en la lista
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(id = R.color.purple_90) // Color de fondo de la tarjeta
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp), // [cite: 38]
-            verticalAlignment = Alignment.CenterVertically
+                .padding(8.dp) // Padding interno de la tarjeta
+            //.height(IntrinsicSize.Min) // Podemos quitar esto o ajustarlo.
+            // La altura se definirá por el contenido, principalmente la imagen de 120.dp
+            // más el padding vertical de la Row (8.dp arriba y 8.dp abajo).
+            ,
+            verticalAlignment = Alignment.CenterVertically // Centra la imagen y la columna de texto verticalmente
         ) {
+            // Tu forma preferida de mostrar la Imagen (Izquierda)
             Image(
                 painter = painterResource(id = artist.imageResource),
-                contentDescription = "Artistas",
+                contentDescription = "Imagen de ${artist.name}", // Descripción más específica
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(120.dp) // Tamaño fijo que especificaste
                     .clip(CircleShape), // [cite: 39]
                 contentScale = ContentScale.Crop
             )
+
+            // Columna para el Texto (Derecha)
             Column(
                 modifier = Modifier
-                    .padding(start = 16.dp)
-                    .weight(1f) // [cite: 40]
+                    .padding(start = 16.dp) // Espacio entre la imagen y el texto
+                    .fillMaxHeight() // Intenta que la columna ocupe la altura disponible por la imagen
+                    .weight(1f), // Ocupa el espacio restante en la fila si es necesario
+                verticalArrangement = Arrangement.Center // Centra el contenido de texto verticalmente en su columna
             ) {
                 Text(
-                    text = artist.name,
-                    fontSize = 20.sp, // [cite: 41]
-                    fontWeight = FontWeight.SemiBold)
-            }
-            Text(text = artist.date,
-                modifier = Modifier.padding(end = 10.dp),
-                style = TextStyle(
-                    fontSize = 16.sp, // [cite: 42]
-                    fontStyle = FontStyle.Italic
+                    text = "Artista",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colorResource(id = R.color.grey),
+                    fontSize = 15.sp,
                 )
-            )
+                Text(
+                    text = artist.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.Black.copy(alpha = 0.87f),
+                    maxLines = 2, // Para evitar que nombres muy largos descuadren mucho
+                    overflow = TextOverflow.Ellipsis // Añade puntos suspensivos si el nombre es muy largo
+                )
+
+                Spacer(modifier = Modifier.height(20.dp)) // Un poco menos de espacio aquí
+
+                Text(
+                    text = "Fecha:",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = colorResource(id = R.color.grey),
+                )
+                Text(
+                    text = artist.date,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colorResource(id = R.color.black)
+                )
+
+                Spacer(modifier = Modifier.height(3.dp))
+                HorizontalDivider(thickness = 1.dp,
+                    color = colorResource(id = R.color.white),
+                    modifier = Modifier.padding(vertical = 2.dp))
+                Spacer(modifier = Modifier.height(3.dp))
+
+                Text(
+                    text = "Hora:",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = colorResource(id = R.color.grey)
+                )
+                Text(
+                    text = artist.time,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colorResource(id = R.color.black)
+                )
+
+            }
         }
+    }
+}
+@Preview(showBackground = true, name = "Atracciones Screen Preview")
+@Composable
+fun AtraccionesScreenPreview() {
+    AppFeriaTheme {
+        AtraccionesScreenContent() // Ya no necesita la lambda onBackPressed
+    }
+}
+
+@Preview(showBackground = true, name = "Artista Row Preview")
+@Composable
+fun ArtistaRowPreview() {
+    AppFeriaTheme {
+        ArtistasRow(
+            artist = Artista("Nombre Artista Ejemplo", "Fecha Ejemplo", time = "4:00", R.drawable.angeles_azules_artista)
+        )
     }
 }

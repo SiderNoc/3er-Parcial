@@ -1,22 +1,52 @@
-package com.maestrocorona.appferia // Asegúrate que el paquete sea el correcto
+package com.maestrocorona.appferia
 
-import com.maestrocorona.appferia.R // Importa tu clase R para acceder a los IDs
+// Ya no necesitas: import androidx.compose.ui.graphics.vector.ImageVector
+// Ya no necesitas: import androidx.compose.material.icons.Icons
+// Ya no necesitas: import androidx.compose.material.icons.filled.* (a menos que mezcles)
+import com.maestrocorona.appferia.R // O la ruta a tu clase R
 
-// 1. Define la estructura de cada ítem del drawer
 data class DrawerItem(
-    val label: String,      // El texto que se mostrará para el ítem
-    val destinationId: Int  // El ID del destino del Fragment en tu nav_graph.xml
-    // Podrías añadir un 'icon: ImageVector?' si quisieras iconos más adelante
+    val label: String,
+    val destinationId: Int,
+    val iconResId: Int // Cambiado de 'icon: ImageVector' a 'iconResId: Int'
 )
 
-// 2. Crea la lista de todos los ítems que aparecerán en el drawer
 val drawerItemsList = listOf(
-    DrawerItem(label = "Inicio", destinationId = R.id.mainFragment),
-    DrawerItem(label = "Negocios Nave 1", destinationId = R.id.nave1Fragment),
-    DrawerItem(label = "Negocios Nave 2", destinationId = R.id.nave2Fragment),
-    DrawerItem(label = "Negocios Nave 3", destinationId = R.id.nave3Fragment),
-    DrawerItem(label = "Atracciones y Conciertos", destinationId = R.id.atraccionesFragment),
-    DrawerItem(label = "Fechas Importantes", destinationId = R.id.fechasImportantesFragment),
-    DrawerItem(label = "Galería de Gatitos", destinationId = R.id.catGalleryFragment) // <-- NUEVO ÍTEM AÑADIDO
-    // Puedes añadir más ítems aquí si lo necesitas
+    // Asegúrate de tener estos drawables en tu carpeta res/drawable
+    // Por ejemplo, si descargaste 'home.svg' y lo guardaste como 'ic_home.xml'
+    DrawerItem(
+        label = "Inicio",
+        destinationId = R.id.mainFragment,
+        iconResId = R.drawable.ic_local_florist
+    ),
+    DrawerItem(
+        label = "Negocios Nave 1",
+        destinationId = R.id.nave1Fragment,
+        iconResId = R.drawable.ic_store
+    ),
+    DrawerItem(
+        label = "Negocios Nave 2",
+        destinationId = R.id.nave2Fragment,
+        iconResId = R.drawable.ic_fastfood
+    ),
+    DrawerItem(
+        label = "Negocios Nave 3",
+        destinationId = R.id.nave3Fragment,
+        iconResId = R.drawable.ic_checkroom // Ejemplo
+    ),
+    DrawerItem(
+        label = "Atracciones y Conciertos",
+        destinationId = R.id.atraccionesFragment,
+        iconResId = R.drawable.ic_star
+    ),
+    DrawerItem(
+        label = "Fechas Importantes",
+        destinationId = R.id.fechasImportantesFragment,
+        iconResId = R.drawable.ic_event // Ejemplo
+    ),
+    DrawerItem(
+        label = "Galería de Gatitos",
+        destinationId = R.id.catGalleryFragment,
+        iconResId = R.drawable.ic_photo_library // Ejemplo
+    )
 )

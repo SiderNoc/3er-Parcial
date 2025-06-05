@@ -10,4 +10,7 @@
 
     <color name="purple_40">#FF6650a4</color>
     <color name="purple_80">#FFD0BCFF</color>
+    <color name="dark_purple">#935B89</color>
+    <color name="grey">#FF444444</color>
+    <color name="purple_90">#E9E1FF</color>
 </resources>

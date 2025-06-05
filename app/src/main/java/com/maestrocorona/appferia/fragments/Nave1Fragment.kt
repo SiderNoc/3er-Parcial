@@ -100,7 +100,6 @@ fun DetalleNave1Screen() { // O como se llame tu Composable para el detalle de l
                 fontSize = 16.sp,
                 textAlign = TextAlign.Justify
             )
-            // Ya NO ponemos el Spacer con weight(1f) aquí dentro si esta Column es scrollable.
         }
 
         // Imagen Decorativa Divisora, alineada al fondo del Box

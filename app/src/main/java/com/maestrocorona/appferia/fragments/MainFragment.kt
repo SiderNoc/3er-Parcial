@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
@@ -34,11 +35,26 @@ import androidx.compose.material3.Text
 import com.maestrocorona.appferia.R
 import androidx.compose.foundation.ExperimentalFoundationApi // Para Pager
 import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager // El componente Pager
 import androidx.compose.foundation.pager.rememberPagerState // Estado para el Pager
 import androidx.compose.ui.AbsoluteAlignment
+import androidx.compose.ui.res.stringResource
+import com.maestrocorona.appferia.ui.theme.Purple80
 
+data class Decorador(
+    val id: Int, // Un ID único para la key en LazyVerticalGrid
+    val nombre: String,
+    @DrawableRes val iconoResId: Int? = null // ID de recurso drawable para un icono opcional
+)
 
+val listaDecoradores = listOf(
+    Decorador(1, "Festival Gastronómico", R.drawable.ic_local_dining),
+    Decorador(2, "Show Ecuestre", R.drawable.ic_horse),
+    Decorador(3, "Clausura de la Feria", R.drawable.ic_firework)
+)
 
 class MainFragment : Fragment() {
 
@@ -100,7 +116,10 @@ fun WelcomeScreen() {
             .fillMaxSize()
             .background(colorResource(id = R.color.white)),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+    {
+
+
         // Carrusel de Fotos en la parte superior
         PhotoCarousel(
             imageIds = carouselImageIds,
@@ -131,6 +150,25 @@ fun WelcomeScreen() {
                 // Considera quitar fontSize si headlineMedium ya es adecuado.
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio después del texto de bienvenida
+            Text(
+                text = stringResource(id=R.string.lorem_ipsum_default),
+                style = MaterialTheme.typography.headlineMedium, // Usa el estilo del tema
+                textAlign = TextAlign.Left,
+                modifier = Modifier.padding(horizontal = 1.dp), // Padding ya es pequeño
+                fontSize = 16.sp // El estilo headlineMedium ya define un tamaño, esto lo podría sobreescribir
+                // Considera quitar fontSize si headlineMedium ya es adecuado.
+            )
+            /*
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 80.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(listaDecoradores, key = { decorador -> decorador.id }) { decorador ->
+                    DecoradorCard(decorador = decorador) // <--- USA EL NUEVO COMPOSABLE
+                }
+            }*/
         }
 
         // Spacer para empujar el decorador hacia abajo
@@ -236,111 +274,34 @@ fun PhotoCarousel(imageIds: List<Int>, modifier: Modifier = Modifier) {
     }
 }
 
-//CONTENIDO ORIGINAL DE MAINSCREEN DE MAINACTIVITY SE QUEDA POR SI LO OCUPO DESPUES
 @Composable
-fun MainScreen(
-    onNavigateToSecondActivity: () -> Unit,
-    onNavigateToDetalleNave: (String, Int) -> Unit,
-    onNavigateToAtracciones: () -> Unit
-) {
-    // Contenido original de MainScreen de tu MainActivity
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+fun DecoradorCard(decorador: Decorador, modifier: Modifier = Modifier) {
+    Card( // Usar Card de Material 3 explícitamente
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        // elevation = CardDefaults.cardElevation(defaultElevation = 2.dp) // Ejemplo de elevación
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "FERIA TABASCO\n2025",
-                style = TextStyle(
-                    color = colorResource(id = R.color.purple_40), // Asegúrate que R.color.purple_40 existe
-                    fontWeight = FontWeight.Bold
-                ),
-                fontSize = 40.sp,
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.Start),
-                textAlign = TextAlign.Left
-            )
-            BusinessItem(
-                text = "Negocios de la Nave 1",
-                imageResource = R.drawable.imagen_nave_1, // Asegúrate que R.drawable.imagen_nave_1 existe
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 1", R.drawable.imagen_nave_1) }
-            )
-            BusinessItem(
-                text = "Negocios de la Nave 2",
-                imageResource = R.drawable.imagen_nave_2, // Asegúrate que R.drawable.imagen_nave_2 existe
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 2", R.drawable.imagen_nave_2) }
-            )
-            BusinessItem(
-                text = "Negocios de la Nave 3",
-                imageResource = R.drawable.imagen_nave_3, // Asegúrate que R.drawable.imagen_nave_3 existe
-                onNavigate = { onNavigateToDetalleNave("Negocios de la Nave 3", R.drawable.imagen_nave_3) }
-            )
-            BusinessItem(
-                text = "Atracciones y Conciertos",
-                imageResource = R.drawable.imagen_conciertos, // Asegúrate que R.drawable.imagen_conciertos existe
-                onNavigate = { onNavigateToAtracciones() }
-            )
-            Button(
-                onClick = onNavigateToSecondActivity,
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text("Fechas importantes")
-            }
-        }
-    }
-}
-
-@Composable
-fun BusinessItem(text: String, imageResource: Int, onNavigate: () -> Unit) {
-    // Contenido original de BusinessItem de tu MainActivity
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.purple_80) // Asegúrate que R.color.purple_80 existe
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Image(
-                painter = painterResource(id = imageResource),
-                contentDescription = "Imagen de $text",
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(8.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                text = text,
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .weight(1f),
-                style = TextStyle(
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    color = colorResource(id = R.color.purple_40)
+            decorador.iconoResId?.let { iconId ->
+                Icon(
+                    painter = painterResource(id = iconId),
+                    contentDescription = decorador.nombre, // Descripción para accesibilidad
+                    modifier = Modifier.size(40.dp), // Ajusta el tamaño según necesites
+                    tint = MaterialTheme.colorScheme.primary // O el color que desees
                 )
-            )
-            FilledTonalButton(onClick = onNavigate,
-                modifier = Modifier.padding(end = 8.dp)) {
-                Text("Ver más")
+                Spacer(modifier = Modifier.height(8.dp))
             }
+            Text(
+                text = decorador.nombre,
+                style = MaterialTheme.typography.titleMedium, // O el estilo que prefieras
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

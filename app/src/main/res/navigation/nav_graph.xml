@@ -44,7 +44,7 @@
     <fragment
         android:id="@+id/atraccionesFragment"
         android:name="com.maestrocorona.appferia.fragments.AtraccionesFragment"
-        android:label="Atracciones y Conciertos"
+        android:label="Conciertos"
         tools:layout="@layout/fragment_atracciones" />
 
     <fragment

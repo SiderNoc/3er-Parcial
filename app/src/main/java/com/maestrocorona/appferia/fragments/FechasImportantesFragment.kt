@@ -7,28 +7,40 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import com.maestrocorona.appferia.R // Importa tu clase R
+import com.maestrocorona.appferia.R
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
-import com.maestrocorona.appferia.ui.theme.Purple80 // O el color que prefieras para las tarjetas
 
-// 1. Data Class para los Eventos
+// Data Class para los Eventos
 data class EventoFeria(
     val id: Int, // Un ID único para la key en LazyVerticalGrid
     val nombre: String,
@@ -36,8 +48,8 @@ data class EventoFeria(
     @DrawableRes val iconoResId: Int? = null // ID de recurso drawable para un icono opcional
 )
 
-// 2. Lista de Ejemplo de Eventos de la Feria
-// NOTA: Reemplaza R.drawable.ic_... con tus propios drawables o usa null para iconoResId.
+// Lista de Eventos de la Feria
+
 val listaEventosFeria = listOf(
     EventoFeria(1, "Inauguración Oficial", "27 de Abril, 2025", R.drawable.ic_event_available), // Ejemplo, necesitarás 'ic_event_available.xml'
     EventoFeria(2, "Elección Flor Tabasco", "28 de Abril, 2025", R.drawable.ic_crown), // Ejemplo, necesitarás 'ic_flower.xml'
@@ -45,12 +57,11 @@ val listaEventosFeria = listOf(
     EventoFeria(4, "Foro Ganadero", "02 de Mayo, 2025", R.drawable.ic_editor_choice), // Ejemplo, necesitarás 'ic_livestock_general.xml'
     EventoFeria(5, "Concierto Estelar: Artista Sorpresa", "05 de Mayo, 2025", R.drawable.ic_mic_external_on), // Ejemplo, necesitarás 'ic_music_concert.xml'
     EventoFeria(6, "Show Ecuestre", "07 de Mayo, 2025", R.drawable.ic_horse), // Ejemplo, necesitarás 'ic_horse_riding.xml'
-    EventoFeria(7, "Festival Gastronómico", "09 de Mayo, 2025", R.drawable.ic_local_diningxml), // Ejemplo
+    EventoFeria(7, "Festival Gastronómico", "09 de Mayo, 2025", R.drawable.ic_local_dining), // Ejemplo
     EventoFeria(8, "Clausura de la Feria", "12 de Mayo, 2025", R.drawable.ic_firework) // Ejemplo, necesitarás 'ic_fireworks_display.xml'
 )
 
-// 3. Composable para la Tarjeta de un Evento
-@OptIn(ExperimentalMaterial3Api::class) // Para Card y sus defaults
+// Composable para la Tarjeta de un Evento
 @Composable
 fun EventoCard(evento: EventoFeria, modifier: Modifier = Modifier) {
     Card(
@@ -58,7 +69,9 @@ fun EventoCard(evento: EventoFeria, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .padding(4.dp), // Pequeño padding alrededor de cada card
         shape = MaterialTheme.shapes.medium, // Esquinas redondeadas estándar
-        colors = CardDefaults.cardColors(containerColor = Purple80.copy(alpha = 0.15f)) // Fondo suave para la tarjeta
+        colors = CardDefaults.cardColors(
+            colorResource(id = R.color.light_green)// Fondo suave para la tarjeta
+        )
     ) {
         Column(
             modifier = Modifier
@@ -75,7 +88,7 @@ fun EventoCard(evento: EventoFeria, modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .size(40.dp) // Tamaño del icono
                         .padding(bottom = 8.dp),
-                    tint = MaterialTheme.colorScheme.primary // Tinta el icono con el color primario del tema
+                    tint = colorResource(id = R.color.dark_green)
                 )
             }
             Text(
@@ -95,7 +108,7 @@ fun EventoCard(evento: EventoFeria, modifier: Modifier = Modifier) {
     }
 }
 
-// 4. Composable para el Contenido de la Pantalla de Fechas Importantes
+// Composable para el Contenido de la Pantalla de Fechas Importantes
 @Composable
 fun FechasImportantesScreenContent() {
     Box(
@@ -127,7 +140,7 @@ fun FechasImportantesScreenContent() {
     }
 }
 
-// 5. Clase del Fragmento
+// Clase del Fragmento
 class FechasImportantesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

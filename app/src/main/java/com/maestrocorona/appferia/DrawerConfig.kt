@@ -1,19 +1,13 @@
 package com.maestrocorona.appferia
 
-// Ya no necesitas: import androidx.compose.ui.graphics.vector.ImageVector
-// Ya no necesitas: import androidx.compose.material.icons.Icons
-// Ya no necesitas: import androidx.compose.material.icons.filled.* (a menos que mezcles)
-import com.maestrocorona.appferia.R // O la ruta a tu clase R
-
 data class DrawerItem(
     val label: String,
     val destinationId: Int,
-    val iconResId: Int // Cambiado de 'icon: ImageVector' a 'iconResId: Int'
+    val iconResId: Int
 )
 
 val drawerItemsList = listOf(
-    // Asegúrate de tener estos drawables en tu carpeta res/drawable
-    // Por ejemplo, si descargaste 'home.svg' y lo guardaste como 'ic_home.xml'
+
     DrawerItem(
         label = "Inicio",
         destinationId = R.id.mainFragment,

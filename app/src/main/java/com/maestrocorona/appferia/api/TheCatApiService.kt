@@ -12,6 +12,5 @@ interface TheCatApiService {
     suspend fun getRandomCatImages(
         @Query("limit") limit: Int = 10, // Cuántas imágenes queremos
         @Query("mime_types") mimeTypes: String = "jpg,png" // Tipos de imagen
-        // Puedes añadir más parámetros según la documentación de TheCatAPI si los necesitas
     ): List<CatImage> // Esperamos una lista de objetos CatImage
 }

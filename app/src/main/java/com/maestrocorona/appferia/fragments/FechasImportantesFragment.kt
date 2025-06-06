@@ -1,4 +1,4 @@
-package com.maestrocorona.appferia.fragments // Asegúrate que el paquete sea el correcto
+package com.maestrocorona.appferia.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -42,23 +42,23 @@ import com.maestrocorona.appferia.ui.theme.AppFeriaTheme
 
 // Data Class para los Eventos
 data class EventoFeria(
-    val id: Int, // Un ID único para la key en LazyVerticalGrid
+    val id: Int,
     val nombre: String,
     val fecha: String,
-    @DrawableRes val iconoResId: Int? = null // ID de recurso drawable para un icono opcional
+    @DrawableRes val iconoResId: Int? = null
 )
 
 // Lista de Eventos de la Feria
 
 val listaEventosFeria = listOf(
-    EventoFeria(1, "Inauguración Oficial", "27 de Abril, 2025", R.drawable.ic_event_available), // Ejemplo, necesitarás 'ic_event_available.xml'
-    EventoFeria(2, "Elección Flor Tabasco", "28 de Abril, 2025", R.drawable.ic_crown), // Ejemplo, necesitarás 'ic_flower.xml'
-    EventoFeria(3, "Desfile de Carros Alegóricos", "30 de Abril, 2025", R.drawable.ic_parade), // Ejemplo, necesitarás 'ic_parade.xml'
-    EventoFeria(4, "Foro Ganadero", "02 de Mayo, 2025", R.drawable.ic_editor_choice), // Ejemplo, necesitarás 'ic_livestock_general.xml'
-    EventoFeria(5, "Concierto Estelar: Artista Sorpresa", "05 de Mayo, 2025", R.drawable.ic_mic_external_on), // Ejemplo, necesitarás 'ic_music_concert.xml'
-    EventoFeria(6, "Show Ecuestre", "07 de Mayo, 2025", R.drawable.ic_horse), // Ejemplo, necesitarás 'ic_horse_riding.xml'
-    EventoFeria(7, "Festival Gastronómico", "09 de Mayo, 2025", R.drawable.ic_local_dining), // Ejemplo
-    EventoFeria(8, "Clausura de la Feria", "12 de Mayo, 2025", R.drawable.ic_firework) // Ejemplo, necesitarás 'ic_fireworks_display.xml'
+    EventoFeria(1, "Inauguración Oficial", "27 de Abril, 2025", R.drawable.ic_event_available),
+    EventoFeria(2, "Elección Flor Tabasco", "28 de Abril, 2025", R.drawable.ic_crown),
+    EventoFeria(3, "Desfile de Carros Alegóricos", "30 de Abril, 2025", R.drawable.ic_parade),
+    EventoFeria(4, "Foro Ganadero", "02 de Mayo, 2025", R.drawable.ic_editor_choice),
+    EventoFeria(5, "Concierto Estelar: Artista Sorpresa", "05 de Mayo, 2025", R.drawable.ic_mic_external_on),
+    EventoFeria(6, "Show Ecuestre", "07 de Mayo, 2025", R.drawable.ic_horse),
+    EventoFeria(7, "Festival Gastronómico", "09 de Mayo, 2025", R.drawable.ic_local_dining),
+    EventoFeria(8, "Clausura de la Feria", "12 de Mayo, 2025", R.drawable.ic_firework)
 )
 
 // Composable para la Tarjeta de un Evento
@@ -127,14 +127,14 @@ fun FechasImportantesScreenContent() {
             }
         }
 
-        // Imagen Decorativa Divisora, alineada al fondo del Box
+        // Imagen decorativa divisora, alineada al fondo del Box
         Image(
             painter = painterResource(id = R.drawable.divisor),
             contentDescription = "Divisor decorativo",
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .aspectRatio(283f / 170f), // Mantiene la proporción de tu imagen 283x170
+                .aspectRatio(283f / 170f), // Mantiene la proporción de la imagen 283x170
             contentScale = ContentScale.Fit
         )
     }

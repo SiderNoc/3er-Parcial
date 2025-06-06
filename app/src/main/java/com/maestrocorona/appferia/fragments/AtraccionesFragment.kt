@@ -38,7 +38,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -69,7 +68,7 @@ class AtraccionesFragment : Fragment() {
 
 @Composable
 fun AtraccionesScreenContent() {
-    // Mantenemos la lista de artistas aquí o la obtenemos de un ViewModel
+
     val artists = listOf(
         Artista("Los Angeles Azules", "Mayo-15", "10:00 PM", R.drawable.angeles_azules_artista),
         Artista("Shakira", "Mayo-15", "09:00 PM", R.drawable.shakira_artista),
@@ -83,13 +82,11 @@ fun AtraccionesScreenContent() {
     Box( // Usamos Box como contenedor raíz para anclar el decorador
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.white)) // Asegura fondo blanco si no viene del tema
+            .background(colorResource(id = R.color.white)) // Asegura fondo blanco
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize() // Ocupa el espacio del Box
-                // Padding: horizontal general, top para espacio con TopAppBar,
-                // bottom para dejar espacio para el decorador fijo.
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 48.dp), // Ajusta el bottom padding (altura_decorador + margen)
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -107,7 +104,7 @@ fun AtraccionesScreenContent() {
 
         }
 
-        // Imagen Decorativa Divisora, alineada al fondo del Box
+        // Imagen decorativa divisora, alineada al fondo del Box
         Image(
             painter = painterResource(id = R.drawable.divisor),
             contentDescription = "Divisor decorativo",
@@ -226,22 +223,5 @@ fun ArtistasRow(artist: Artista) {
                 }
             }
         }
-    }
-}
-@Preview(showBackground = true, name = "Atracciones Screen Preview")
-@Composable
-fun AtraccionesScreenPreview() {
-    AppFeriaTheme {
-        AtraccionesScreenContent()
-    }
-}
-
-@Preview(showBackground = true, name = "Artista Row Preview")
-@Composable
-fun ArtistaRowPreview() {
-    AppFeriaTheme {
-        ArtistasRow(
-            artist = Artista("Nombre Artista Ejemplo", "Fecha Ejemplo", time = "4:00", R.drawable.angeles_azules_artista)
-        )
     }
 }

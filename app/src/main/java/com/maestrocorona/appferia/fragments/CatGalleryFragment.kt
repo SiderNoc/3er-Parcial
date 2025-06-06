@@ -70,7 +70,6 @@ class CatGalleryFragment : Fragment() {
     }
 }
 
-// Este es el nuevo Composable que mostrará la UI de la galería
 @Composable
 fun CatGalleryScreenContent(
     isLoading: Boolean,

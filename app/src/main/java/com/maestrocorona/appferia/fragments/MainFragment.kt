@@ -44,17 +44,6 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.res.stringResource
 import com.maestrocorona.appferia.ui.theme.Purple80
 
-data class Decorador(
-    val id: Int, // Un ID único para la key en LazyVerticalGrid
-    val nombre: String,
-    @DrawableRes val iconoResId: Int? = null // ID de recurso drawable para un icono opcional
-)
-
-val listaDecoradores = listOf(
-    Decorador(1, "Festival Gastronómico", R.drawable.ic_local_dining),
-    Decorador(2, "Show Ecuestre", R.drawable.ic_horse),
-    Decorador(3, "Clausura de la Feria", R.drawable.ic_firework)
-)
 
 class MainFragment : Fragment() {
 
@@ -66,35 +55,6 @@ class MainFragment : Fragment() {
             setContent {
                 AppFeriaTheme {
                     WelcomeScreen()
-                    /*
-                    MainScreen(
-                        onNavigateToSecondActivity = {
-                            // Navegar a FechasImportantesFragment
-                            findNavController().navigate(R.id.action_mainFragment_to_fechasImportantesFragment)
-                        },
-                        onNavigateToDetalleNave = { naveName, _ -> // imageResource ya no es necesario aquí
-                            // porque cada NaveXFragment tiene su propia imagen.
-                            when (naveName) {
-                                "Negocios de la Nave 1" -> {
-                                    findNavController().navigate(R.id.action_mainFragment_to_nave1Fragment)
-                                }
-                                "Negocios de la Nave 2" -> {
-                                    findNavController().navigate(R.id.action_mainFragment_to_nave2Fragment)
-                                }
-                                "Negocios de la Nave 3" -> {
-                                    findNavController().navigate(R.id.action_mainFragment_to_nave3Fragment)
-                                }
-                                else -> {
-                                    // Opcional: manejar un caso por defecto o loggear un error si el nombre no coincide
-                                    println("Error: Nombre de nave no reconocido - $naveName")
-                                }
-                            }
-                        },
-                        onNavigateToAtracciones = {
-                            // Navegar a AtraccionesFragment
-                            findNavController().navigate(R.id.action_mainFragment_to_atraccionesFragment)
-                        }
-                    )*/
                 }
             }
         }
@@ -118,8 +78,6 @@ fun WelcomeScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-
-
         // Carrusel de Fotos en la parte superior
         PhotoCarousel(
             imageIds = carouselImageIds,
@@ -145,49 +103,35 @@ fun WelcomeScreen() {
                 text = "¡Bienvenido a la Feria Tabasco!",
                 style = MaterialTheme.typography.headlineMedium, // Usa el estilo del tema
                 textAlign = TextAlign.Left,
-                modifier = Modifier.padding(horizontal = 1.dp), // Padding ya es pequeño
-                fontSize = 16.sp // El estilo headlineMedium ya define un tamaño, esto lo podría sobreescribir
-                // Considera quitar fontSize si headlineMedium ya es adecuado.
+                modifier = Modifier.padding(horizontal = 1.dp), // Padding pequeño
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio después del texto de bienvenida
             Text(
                 text = stringResource(id=R.string.lorem_ipsum_default),
                 style = MaterialTheme.typography.headlineMedium, // Usa el estilo del tema
                 textAlign = TextAlign.Left,
-                modifier = Modifier.padding(horizontal = 1.dp), // Padding ya es pequeño
-                fontSize = 16.sp // El estilo headlineMedium ya define un tamaño, esto lo podría sobreescribir
-                // Considera quitar fontSize si headlineMedium ya es adecuado.
+                modifier = Modifier.padding(horizontal = 1.dp), // Padding pequeño
+                fontSize = 16.sp
             )
-            /*
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 80.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(listaDecoradores, key = { decorador -> decorador.id }) { decorador ->
-                    DecoradorCard(decorador = decorador) // <--- USA EL NUEVO COMPOSABLE
-                }
-            }*/
+
         }
 
         // Spacer para empujar el decorador hacia abajo
         Spacer(modifier = Modifier.weight(1f))
 
-        // Imagen Decorativa Divisora en la parte inferior
+        // Imagen decorativa divisora en la parte inferior
         Image(
-            painter = painterResource(id = R.drawable.divisor), // Tu imagen 283x170
+            painter = painterResource(id = R.drawable.divisor),
             contentDescription = "Divisor decorativo",
             modifier = Modifier
                 .fillMaxWidth() // Ocupa todo el ancho de la pantalla
-                .aspectRatio(283f / 170f), // Mantiene la proporción original de tu imagen
+                .aspectRatio(283f / 170f), // Mantiene la proporción original de la imagen
             contentScale = ContentScale.Fit // Asegura que toda la imagen sea visible, ajustada al ancho
         )
-        // Opcional: si quieres un pequeño margen en la parte inferior de la pantalla, después del divisor:
-        // Spacer(modifier = Modifier.height(8.dp))
     }
 }
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 fun PhotoCarousel(imageIds: List<Int>, modifier: Modifier = Modifier) {
     // Si no hay imágenes o solo hay una, no necesitamos el Pager ni el auto-scroll.
@@ -270,38 +214,6 @@ fun PhotoCarousel(imageIds: List<Int>, modifier: Modifier = Modifier) {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun DecoradorCard(decorador: Decorador, modifier: Modifier = Modifier) {
-    Card( // Usar Card de Material 3 explícitamente
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        // elevation = CardDefaults.cardElevation(defaultElevation = 2.dp) // Ejemplo de elevación
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            decorador.iconoResId?.let { iconId ->
-                Icon(
-                    painter = painterResource(id = iconId),
-                    contentDescription = decorador.nombre, // Descripción para accesibilidad
-                    modifier = Modifier.size(40.dp), // Ajusta el tamaño según necesites
-                    tint = MaterialTheme.colorScheme.primary // O el color que desees
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            Text(
-                text = decorador.nombre,
-                style = MaterialTheme.typography.titleMedium, // O el estilo que prefieras
-                textAlign = TextAlign.Center
-            )
         }
     }
 }

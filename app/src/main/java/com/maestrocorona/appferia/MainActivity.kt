@@ -29,20 +29,14 @@ import androidx.navigation.fragment.NavHostFragment
 import com.maestrocorona.appferia.ui.theme.AppFeriaTheme // Tu tema de Compose
 import kotlinx.coroutines.launch // Para lanzar corutinas para el drawer
 
-// Asumimos que DrawerConfig.kt está en el mismo paquete y define:
-// data class DrawerItem(val label: String, val destinationId: Int, val iconResId: Int)
-// val drawerItemsList: List<DrawerItem>
-// Y que R.color.dark_purple, R.color.white, R.color.purple_80, R.drawable.header_menu existen.
 
 class MainActivity : FragmentActivity() {
 
-    // Ya no necesitamos una propiedad de clase para el NavController aquí,
-    // lo manejaremos como un estado dentro de setContent.
 
-    @OptIn(ExperimentalMaterial3Api::class) // Necesario para varios componentes de Material 3
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge() // Para UI de borde a borde si está configurado
+        enableEdgeToEdge()
 
         setContent {
             AppFeriaTheme { // Aplicamos el tema general de la aplicación
@@ -69,7 +63,6 @@ class MainActivity : FragmentActivity() {
                 val currentRouteId: Int? = navBackStackEntry?.destination?.id
 
                 // Obtenemos el 'label' del destino actual (definido en nav_graph.xml) para el título de la TopAppBar.
-                // Si no hay label, usamos el nombre de la app como default.
                 val currentScreenLabel =
                     navBackStackEntry?.destination?.label?.toString()
                         ?: getString(R.string.app_name) // app_name debe estar en strings.xml
@@ -119,7 +112,7 @@ class MainActivity : FragmentActivity() {
                                             imageVector = Icons.Filled.Menu, // Icono de hamburguesa estándar
                                             contentDescription = "Abrir menú de navegación",
                                             modifier = Modifier.size(40.dp) // Tamaño del icono ajustado
-                                            // El color del icono se define en 'colors' abajo
+
                                         )
                                     }
                                 },
@@ -175,7 +168,6 @@ class MainActivity : FragmentActivity() {
 }
 
 // Composable para el contenido del Navigation Drawer
-@OptIn(ExperimentalMaterial3Api::class) // Para ModalDrawerSheet y NavigationDrawerItem
 @Composable
 fun AppDrawerContent(
     currentRouteId: Int?, // Para saber qué ítem está seleccionado
@@ -187,11 +179,11 @@ fun AppDrawerContent(
         Column(modifier = Modifier.fillMaxSize()) { // Columna para organizar el contenido del drawer
             // 1. Imagen de Cabecera
             Image(
-                painter = painterResource(id = R.drawable.header_menu), // Tu imagen de cabecera
+                painter = painterResource(id = R.drawable.header_menu), // Imagen de cabecera
                 contentDescription = "Cabecera del Menú",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp), // Altura que definiste para la cabecera
+                    .height(250.dp), // Altura para la cabecera
                 contentScale = ContentScale.Crop // Modo de escalado
             )
 
@@ -204,7 +196,7 @@ fun AppDrawerContent(
                 contentAlignment = Alignment.CenterStart, // Alineación del texto
             ) {
                 Text(
-                    text = "Bienvenid@!", // Tu texto de saludo
+                    text = "Bienvenid@!", // Texto de saludo
                     style = MaterialTheme.typography.titleLarge.copy(
                         color = colorResource(id = R.color.white), // Color blanco para el texto
                         fontWeight = FontWeight.Bold // En negrita
@@ -214,13 +206,13 @@ fun AppDrawerContent(
                 )
             }
 
-            // 3. Lista de Ítems de Navegación
+            // 3. Lista de Ítems de navegación
             Column(
                 modifier = Modifier
                     .padding(vertical = 12.dp) // Padding vertical para la lista de ítems
                     .weight(1f) // Para que ocupe el espacio restante si el contenido es largo y necesita scroll
             ) {
-                // drawerItemsList viene de tu archivo DrawerConfig.kt
+
                 drawerItemsList.forEach { item ->
                     val isSelected = item.destinationId == currentRouteId
 
@@ -248,7 +240,6 @@ fun AppDrawerContent(
                             selectedContainerColor = colorResource(id = R.color.light_purple), // Color para el ítem seleccionado
                             selectedTextColor = colorResource(id = R.color.white),
                             selectedIconColor = colorResource(id = R.color.white), // Hace el icono blanco cuando está seleccionado
-                            // Puedes ajustar selectedTextColor, unselectedTextColor, etc., aquí si es necesario
                         )
                     )
                 }

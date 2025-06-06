@@ -109,8 +109,7 @@ fun DetalleNave3Screen() { // O como se llame tu Composable para el detalle de l
             painter = painterResource(id = R.drawable.divisor),
             contentDescription = "Divisor decorativo",
             modifier = Modifier
-                .align(Alignment.BottomCenter) // ¡CLAVE! Alinea esta imagen al fondo y centro del Box
-                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
                 .aspectRatio(283f / 170f), // Mantiene la proporción de tu imagen de 283x170
             contentScale = ContentScale.Fit
         )
